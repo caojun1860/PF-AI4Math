@@ -81,3 +81,17 @@ models:
     input_cny_per_million: "3"
     output_cny_per_million: "15"
     timeout_seconds: 900
+
+  # 图片理解：默认复用豆包 Seed 2.1（支持视觉）。
+  # 若该 endpoint 未开通视觉，替换为已开通的视觉模型即可，Agent 侧无需改动。
+  vision:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 128000
+    max_output_tokens: 4096
+    default_output_tokens: 2048
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 180

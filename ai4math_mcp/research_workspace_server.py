@@ -51,6 +51,17 @@ def _pdf_path(value: str) -> Path:
     return path
 
 
+def _image_path(value: str) -> Path:
+    path = Path(value).expanduser().resolve(strict=True)
+    if path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".gif"} or not path.is_file():
+        raise ValueError("只接受现有 PNG/JPG/WebP/GIF 图片")
+    if path.stat().st_size > 10 * 1024 * 1024:
+        raise ValueError("图片不能超过 10 MB")
+    if not any(path.is_relative_to(root) for root in _allowed_roots()):
+        raise ValueError("图片必须位于项目、Documents、Downloads、Desktop、Zotero 或临时附件目录")
+    return path
+
+
 def _slug(value: str) -> str:
     from tools.paper_manager import safe_slug
 
@@ -178,6 +189,99 @@ def paper_build_bundle(problem_slug: str) -> dict[str, Any]:
     env = os.environ.copy()
     env["PATH"] = "/Library/TeX/texbin:/usr/bin:/bin:/usr/sbin:/sbin:" + env.get("PATH", "")
     return build_and_bundle(problem_slug)
+
+
+@mcp.tool()
+def url_fetch(url: str, problem_slug: str, max_characters: int = 120000) -> dict[str, Any]:
+    """Fetch a public web page and convert it to Markdown locally; result saved in the paper folder."""
+    import httpx
+    from urllib.parse import urlparse
+
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("只接受 http/https URL")
+    slug = _slug(problem_slug)
+    maximum = int(max_characters)
+    if not 1000 <= maximum <= 180000:
+        raise ValueError("max_characters 必须在 1,000 到 180,000 之间")
+    output_dir = ROOT / "papers" / slug / "parsed"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    safe_name = re.sub(r"[^a-zA-Z0-9._-]+", "_", parsed.netloc + parsed.path)[:120].strip("_") or "page"
+    html_path = output_dir / f"{safe_name}.html"
+    md_path = output_dir / f"{safe_name}.md"
+    headers = {"User-Agent": "AI4Math-Workflow/1.0 (+local research tool)"}
+    with httpx.Client(follow_redirects=True, timeout=30) as client:
+        resp = client.get(url, headers=headers)
+        resp.raise_for_status()
+        if len(resp.content) > 20 * 1024 * 1024:
+            raise ValueError("页面超过 20 MB，拒绝抓取")
+        html_path.write_bytes(resp.content)
+    _run([str(MARKITDOWN), str(html_path), "-o", str(md_path)], timeout=120)
+    text = md_path.read_text(encoding="utf-8", errors="replace")
+    html_path.unlink(missing_ok=True)
+    return {
+        "url": url,
+        "saved_to": str(md_path),
+        "total_characters": len(text),
+        "content": text[:maximum],
+        "truncated": len(text) > maximum,
+        "privacy": "fetched from public web, stored locally",
+    }
+
+
+@mcp.tool()
+def image_describe(path: str, problem_slug: str, prompt: str | None = None) -> dict[str, Any]:
+    """Send a local image to the vision-capable model via the budget gateway and return a structured description."""
+    import base64
+    import httpx
+
+    source = _image_path(path)
+    slug = _slug(problem_slug)
+    encoded = base64.b64encode(source.read_bytes()).decode("ascii")
+    mime = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".gif": "image/gif",
+    }[source.suffix.lower()]
+    user_prompt = (
+        prompt
+        or "请详细描述这张图片的内容：如果是数学公式，用 LaTeX 转写；如果是图表，说明数据和趋势；如果是截图，提取关键文字。"
+    )
+    payload = {
+        "model": "vision",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": user_prompt},
+                    {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{encoded}"}},
+                ],
+            }
+        ],
+        "max_tokens": 4096,
+        "temperature": 0.1,
+    }
+    with httpx.Client(timeout=180) as client:
+        resp = client.post("http://127.0.0.1:4001/v1/chat/completions", json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+    description = data["choices"][0]["message"]["content"]
+    output_dir = ROOT / "papers" / slug / "evidence" / "image-descriptions"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    out = output_dir / f"{source.stem}.md"
+    out.write_text(
+        f"# 图片描述：{source.name}\n\n来源：{source}\n\n{description}\n",
+        encoding="utf-8",
+    )
+    return {
+        "source": str(source),
+        "saved_to": str(out),
+        "description": description,
+        "model": "vision (via budget gateway)",
+        "privacy": "image sent to configured vision model via local gateway",
+    }
 
 
 if __name__ == "__main__":
