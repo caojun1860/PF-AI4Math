@@ -1,0 +1,12 @@
+# 将需要的模型路由复制到 config/gateway.yaml 的 models 下。
+# 每个供应商应使用独立的预算 ID、金额上限和 allowed_provider_prefixes。
+local_or_openai_compatible:
+  provider_model: openai/REPLACE_WITH_MODEL_ID
+  api_base: http://127.0.0.1:REPLACE_WITH_PORT/v1
+  api_key_env: LOCAL_MODEL_API_KEY
+  max_context_tokens: 32768
+  max_output_tokens: 4096
+  default_output_tokens: 2048
+  input_cny_per_million: "0"
+  output_cny_per_million: "0"
+  timeout_seconds: 900

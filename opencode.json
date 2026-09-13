@@ -1,0 +1,145 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "@hueyexe/opencode-ensemble@0.16.0"
+  ],
+  "enabled_providers": [
+    "ai4math-gateway",
+    "doubao-ark"
+  ],
+  "autoupdate": false,
+  "provider": {
+    "ai4math-gateway": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AI4Math 本地预算网关",
+      "options": {
+        "baseURL": "http://127.0.0.1:4001/v1",
+        "apiKey": "ai4math-local"
+      },
+      "models": {
+        "utility": {
+          "name": "内部轻任务 · 豆包",
+          "limit": {
+            "context": 16384,
+            "output": 256
+          }
+        },
+        "fast": {
+          "name": "快速研究 · 豆包质量模式",
+          "limit": {
+            "context": 240000,
+            "output": 8192
+          }
+        },
+        "reasoning": {
+          "name": "深度推理 · 豆包",
+          "limit": {
+            "context": 240000,
+            "output": 16384
+          }
+        },
+        "reader": {
+          "name": "文献阅读 · 豆包",
+          "limit": {
+            "context": 240000,
+            "output": 12288
+          }
+        },
+        "reviewer": {
+          "name": "证明审查 · 豆包",
+          "limit": {
+            "context": 240000,
+            "output": 12288
+          }
+        }
+      }
+    },
+    "doubao-ark": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "豆包 · 火山方舟",
+      "options": {
+        "baseURL": "https://ark.cn-beijing.volces.com/api/v3"
+      },
+      "models": {
+        "doubao-seed-2-1-turbo-260628": {
+          "name": "Doubao Seed 2.1 Turbo"
+        }
+      }
+    }
+  },
+  "model": "ai4math-gateway/reasoning",
+  "small_model": "ai4math-gateway/utility",
+  "default_agent": "research-orchestrator",
+  "subagent_depth": 1,
+  "mcp": {
+    "zotero_local": {
+      "type": "local",
+      "command": [
+        "./.venv/bin/python",
+        "-m",
+        "ai4math_mcp.zotero_server"
+      ],
+      "cwd": ".",
+      "enabled": true,
+      "timeout": 10000
+    },
+    "lean_lsp": {
+      "type": "local",
+      "command": [
+        "./tools/launch_lean_mcp.sh",
+        "--transport",
+        "stdio",
+        "--lean-project-path",
+        "formal",
+        "--disable-tools",
+        "lean_leansearch,lean_loogle,lean_leanfinder,lean_state_search,lean_hammer_premise,lean_run_code,lean_profile_proof,lean_get_widgets,lean_get_widget_source",
+        "--instructions",
+        "Inspect and verify Lean files only inside this project's formal directory. Do not change source files."
+      ],
+      "cwd": ".",
+      "environment": {
+        "LEAN_LOG_LEVEL": "ERROR"
+      },
+      "enabled": true,
+      "timeout": 30000
+    },
+    "literature_search": {
+      "type": "local",
+      "command": [
+        "./.runtime/paper-search/bin/python",
+        "-m",
+        "ai4math_mcp.literature_search_server"
+      ],
+      "cwd": ".",
+      "enabled": true,
+      "timeout": 30000
+    },
+    "research_workspace": {
+      "type": "local",
+      "command": [
+        "./.venv/bin/python",
+        "-m",
+        "ai4math_mcp.research_workspace_server"
+      ],
+      "cwd": ".",
+      "enabled": true,
+      "timeout": 30000
+    },
+    "undermind": {
+      "type": "remote",
+      "url": "https://mcp.undermind.ai/mcp",
+      "oauth": {
+        "clientId": "opencode"
+      },
+      "enabled": true,
+      "timeout": 30000
+    }
+  },
+  "permission": {
+    "zotero_local_*": "deny",
+    "lean_lsp_*": "deny",
+    "literature_search_*": "deny",
+    "research_workspace_*": "deny",
+    "undermind_*": "deny"
+  }
+}

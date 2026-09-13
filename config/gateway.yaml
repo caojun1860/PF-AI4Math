@@ -1,0 +1,83 @@
+server:
+  host: 127.0.0.1
+  port: 4001
+  auth_token: ai4math-local
+  database: .runtime/gateway/budget.sqlite3
+  # 多个 Agent 可以并行工作，但豆包调用由网关排队并平滑启动，避免请求突增保护。
+  max_concurrent_requests: 2
+  min_start_interval_seconds: 6
+  retry_attempts: 4
+  retry_base_seconds: 8
+  sse_keepalive_seconds: 15
+
+budget:
+  id: default
+  total_tokens: 100000000
+  total_cny: "200.00"
+  total_requests: 500
+  # 高额度只允许用于当前豆包路由；接入其他供应商前必须另设预算策略。
+  allowed_provider_prefixes:
+    - openai/doubao-
+
+# 当前四个角色都路由到已开通的豆包模型。以后只改 provider_model、api_base
+# 和密钥来源即可接入 DeepSeek、Kimi 或 GPT，OpenCode 中的角色名无需改变。
+models:
+  utility:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 16384
+    max_output_tokens: 256
+    default_output_tokens: 192
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 60
+
+  fast:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 240000
+    max_output_tokens: 8192
+    default_output_tokens: 4096
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 120
+
+  reasoning:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 240000
+    max_output_tokens: 16384
+    default_output_tokens: 8192
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 900
+
+  reader:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 240000
+    max_output_tokens: 12288
+    default_output_tokens: 6144
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 900
+
+  reviewer:
+    provider_model: openai/doubao-seed-2-1-turbo-260628
+    api_base: https://ark.cn-beijing.volces.com/api/v3
+    api_key_env: ARK_API_KEY
+    keychain_service: AI4Math Doubao Ark
+    max_context_tokens: 240000
+    max_output_tokens: 12288
+    default_output_tokens: 6144
+    input_cny_per_million: "3"
+    output_cny_per_million: "15"
+    timeout_seconds: 900

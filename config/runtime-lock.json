@@ -1,0 +1,21 @@
+{
+  "paper-search-mcp": {
+    "version": "0.1.4",
+    "environment": ".runtime/paper-search",
+    "exposure": "Restricted read-only search facade"
+  },
+  "markitdown": {
+    "version": "0.1.6",
+    "environment": ".runtime/pdf-tools",
+    "network_features": false
+  },
+  "liteparse": {
+    "version": "2.0.0",
+    "environment": ".runtime/pdf-tools",
+    "mode": "Local parsing and OCR"
+  },
+  "opencode-ensemble": {
+    "version": "0.16.0",
+    "dashboard": "http://127.0.0.1:4747"
+  }
+}

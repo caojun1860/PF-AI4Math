@@ -1,0 +1,54 @@
+# ===== Python / 运行时环境（由 uv / npm 恢复，不入库）=====
+.venv/
+.runtime/
+.opencode/node_modules/
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.Python
+
+# ===== 密钥与本机私有配置 =====
+.env
+.env.*
+!.env.example
+*.local.json
+.DS_Store
+
+# ===== 科研产物（默认不公开，详见 GITHUB-PUBLISHING.md）=====
+papers/
+paper/
+reports/
+state/
+tasks/
+research/
+experiments/
+literature/
+formal/
+
+# ===== 模型交接包（含科研上下文，本地生成）=====
+.handoff/
+
+# ===== 构建缓存与可重新生成的交付物 =====
+build/
+deliverables/
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.vrb
+
+# ===== 本地数据库 =====
+*.sqlite3
+*.db
+*.sqlite
+
+# ===== Lean 构建（兜底，formal/ 已整目录排除）=====
+.lake/

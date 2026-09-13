@@ -1,0 +1,17 @@
+{
+  "mergeOnCleanup": false,
+  "stallThresholdMs": 600000,
+  "stallMinSteps": 5,
+  "stallTokenThreshold": 200,
+  "timeoutMs": 3600000,
+  "rateLimitCapacity": 3,
+  "dashboardPort": 4747,
+  "defaultModel": "",
+  "modelsByAgent": {
+    "explore": "ai4math-gateway/reader",
+    "build": "ai4math-gateway/reasoning"
+  },
+  "modelPool": [],
+  "modelAssignment": "default",
+  "promptForModels": false
+}

@@ -1,0 +1,87 @@
+{
+  "sympy": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/sympy",
+    "local_changes": false,
+    "review": "Read SKILL.md; inspected reference file inventory and command/network patterns; no executable scripts bundled."
+  },
+  "lean4": {
+    "repository": "https://github.com/cameronfreer/lean4-skills",
+    "commit": "34757f2756bf64d19b54fad5258f891a5a534573",
+    "path": "plugins/lean4/skills/lean4",
+    "local_changes": false,
+    "installation": "Project-local skill-only installation for OpenCode",
+    "review": "Read SKILL.md; inspected the complete installed inventory. The skill-only package contains documentation, metadata, and reference files only; no executable scripts are bundled."
+  },
+  "literature-review": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/literature-review",
+    "local_changes": false,
+    "runtime_policy": "Methodology and templates only; Parallel/OpenRouter and bundled scripts are not enabled."
+  },
+  "citation-management": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/citation-management",
+    "local_changes": false,
+    "runtime_policy": "Local Zotero metadata and procedural guidance only; network and shell scripts are not enabled."
+  },
+  "peer-review": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/peer-review",
+    "local_changes": false,
+    "runtime_policy": "Local analytical workflow only; bundled scripts are installed but not executable by agents."
+  },
+  "scientific-critical-thinking": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/scientific-critical-thinking",
+    "local_changes": false,
+    "runtime_policy": "Offline analytical guidance only; optional OpenRouter figures are disabled."
+  },
+  "scientific-writing": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/scientific-writing",
+    "local_changes": false,
+    "runtime_policy": "Evidence-bound writing guidance only; agents cannot execute scripts or edit files."
+  },
+  "academic-paper-review": {
+    "repository": "https://github.com/bytedance/deer-flow",
+    "commit": "ce635b7de6e9495d299874cf347e899fa5d315e4",
+    "path": "skills/public/academic-paper-review",
+    "local_changes": false,
+    "runtime_policy": "Adapted through paper-reader instructions to local Zotero and project paths; generic web and /mnt paths are disabled."
+  },
+  "liteparse": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/liteparse",
+    "local_changes": false,
+    "runtime_policy": "Local PDF parsing, OCR, and page screenshots only; outputs are scoped to papers/<problem>/ within this project."
+  },
+  "markitdown": {
+    "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+    "commit": "c1ed16d97dd61ff50a3bd46dd353e4a55fd77f34",
+    "path": "skills/markitdown",
+    "local_changes": false,
+    "runtime_policy": "Local PDF-to-Markdown conversion only; Azure cloud conversion and third-party plugins are disabled."
+  },
+  "paper-search": {
+    "repository": "https://github.com/openags/paper-search-mcp",
+    "commit": "234678ab231074a7977320978ee0496dcdaddd1f",
+    "path": "claude-code",
+    "local_changes": false,
+    "runtime_policy": "Methodology plus a restricted MCP facade. Only OpenAlex, Semantic Scholar, arXiv, and Crossref search tools are exposed; Google Scholar scraping, downloads, and Sci-Hub are not exposed."
+  },
+  "opencode-ensemble": {
+    "repository": "https://github.com/hueyexe/opencode-ensemble",
+    "commit": "eaf9e84a6e872e6af9ad8bb5a8fd274ce926a878",
+    "path": "skills/opencode-ensemble",
+    "local_changes": false,
+    "runtime_policy": "Used with @hueyexe/opencode-ensemble@0.16.0, maximum five teammates, three by default, research agents without worktrees, and automatic merging disabled."
+  }
+}
